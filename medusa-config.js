@@ -129,4 +129,7 @@ module.exports = {
   projectConfig,
   plugins,
   modules,
+  migrations: {
+    path: "./src/migrations"
+  },
 };
