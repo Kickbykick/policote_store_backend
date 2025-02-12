@@ -2,6 +2,7 @@ import { TransactionBaseService } from "@medusajs/medusa";
 import { MedusaError } from "@medusajs/utils";
 import CustomerRepository from "src/repositories/customer";
 import DeliveryOrderExtensionRepository from "src/repositories/delivery-order-extension";
+import ProfileRepository from "src/repositories/profile";
 import { DeliveryOrderExtension } from "src/models/delivery-order-extension";
 import RatingRepository from "src/repositories/rating";
 import { Profile } from "src/models/profile";
@@ -13,23 +14,49 @@ class ServiceProviderService extends TransactionBaseService {
     protected readonly serviceProviderRepository_: typeof ServiceProviderRepository;
     protected readonly deliveryOrderExtensionRepository_: typeof DeliveryOrderExtensionRepository;
     protected readonly customerRepository_: typeof CustomerRepository;
+    protected readonly profileRepository_: typeof ProfileRepository;
 
-    constructor({ serviceProviderRepository, deliveryOrderExtensionRepository, customerRepository, rewardRepository }) {
+    constructor({ serviceProviderRepository, deliveryOrderExtensionRepository, customerRepository, profileRepository  }) {
         super(arguments[0]);
         this.serviceProviderRepository_ = serviceProviderRepository;
         this.deliveryOrderExtensionRepository_ = deliveryOrderExtensionRepository;
         this.customerRepository_ = customerRepository;
+        this.profileRepository_ = profileRepository;
+    }
+    
+    async list(): Promise<ServiceProvider[]> {
+        return await this.atomicPhase_(async (manager) => {
+            const serviceProviderRepo = manager.withRepository(this.serviceProviderRepository_)
+            return await serviceProviderRepo.find({
+                relations: ['profile', 'delivery_order_extension']
+            })
+        })
     }
 
-    async create(profile: Profile | null, data: Partial<ServiceProvider>): Promise<ServiceProvider> {
+    async create(profileId: string | null, data: Partial<ServiceProvider>): Promise<ServiceProvider> {
         return await this.atomicPhase_(async (manager) => {
-            const serviceProvider = this.serviceProviderRepository_.create({
+            const serviceProviderRepo = manager.withRepository(this.serviceProviderRepository_);
+            const profileRepo = manager.withRepository(this.profileRepository_);
+            
+            let profile = null;
+            if (profileId) {
+                profile = await profileRepo.findOne({ where: { id: profileId } });
+                if (!profile) {
+                    throw new MedusaError(
+                        MedusaError.Types.NOT_FOUND,
+                        `Profile with id: ${profileId} was not found`
+                    );
+                }
+            }
+    
+            const serviceProvider = serviceProviderRepo.create({
                 profile: profile,
                 delivery_order_extension: [],
                 ...data
-            })
-            return this.serviceProviderRepository_.save(serviceProvider)
-        })
+            });
+            
+            return await serviceProviderRepo.save(serviceProvider);
+        });
     }
 
     async retrieve(service_provider_id: string): Promise<ServiceProvider> {

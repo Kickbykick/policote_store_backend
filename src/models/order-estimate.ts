@@ -37,7 +37,7 @@ export class OrderEstimate extends BaseEntity {
     
     @BeforeInsert()
     private beforeInsert(): void {
-        this.id = generateEntityId(this.id, "oestmt");
+        this.id = generateEntityId(this.id, "oe");
     }
 }
   

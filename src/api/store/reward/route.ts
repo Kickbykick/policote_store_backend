@@ -13,5 +13,5 @@ export const GET = async (
 
   const rewards = await rewardService.list()
 
-  res.json({ rewards })
+  res.json({ reward: rewards })
 }

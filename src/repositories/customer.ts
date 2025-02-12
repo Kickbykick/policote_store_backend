@@ -6,12 +6,8 @@ import {
   
   export const CustomerRepository = dataSource
     .getRepository(Customer)
-    .extend({
-      // it is important to spread the existing repository here.
-      //  Otherwise you will end up losing core properties
-      ...Object.assign(MedusaCustomerRepository, {
-        target: Customer,
-      }),
-    })
+    .extend(Object.assign(MedusaCustomerRepository, {
+      target: Customer,
+    }))
   
   export default CustomerRepository

@@ -49,6 +49,95 @@ class AddressService extends TransactionBaseService {
       return await addressRepo.save(address);
     });
   }
+
+  async addPickupInstruction(
+    addressId: string, 
+    instruction: { image_url?: string; description: string }
+  ): Promise<Address> {
+      return await this.atomicPhase_(async (manager) => {
+          const address = await this.retrieve(addressId);
+          const currentInstructions = address.pickup_instructions || [];
+          
+          address.pickup_instructions = [...currentInstructions, instruction];
+          return await manager.withRepository(this.addressRepository_).save(address);
+      });
+  }
+    
+  async updatePickupInstruction(
+      addressId: string,
+      index: number,
+      instruction: { image_url?: string; description: string }
+  ): Promise<Address> {
+      return await this.atomicPhase_(async (manager) => {
+          const address = await this.retrieve(addressId);
+          const instructions = address.pickup_instructions || [];
+          
+          instructions[index] = instruction;
+          address.pickup_instructions = instructions;
+          
+          return await manager.withRepository(this.addressRepository_).save(address);
+      });
+  }
+    
+  async removePickupInstruction(
+      addressId: string,
+      index: number
+  ): Promise<Address> {
+      return await this.atomicPhase_(async (manager) => {
+          const address = await this.retrieve(addressId);
+          const instructions = address.pickup_instructions || [];
+          
+          instructions.splice(index, 1);
+          address.pickup_instructions = instructions;
+          
+          return await manager.withRepository(this.addressRepository_).save(address);
+      });
+  }
+
+  async addDeliveryInstruction(
+      addressId: string, 
+      instruction: { image_url?: string; description: string }
+  ): Promise<Address> {
+      return await this.atomicPhase_(async (manager) => {
+          const address = await this.retrieve(addressId);
+          const currentInstructions = address.delivery_instructions || [];
+          
+          address.delivery_instructions = [...currentInstructions, instruction];
+          return await manager.withRepository(this.addressRepository_).save(address);
+      });
+  }
+    
+  async updateDeliveryInstruction(
+      addressId: string,
+      index: number,
+    instruction: { image_url?: string; description: string }
+  ): Promise<Address> {
+      return await this.atomicPhase_(async (manager) => {
+          const address = await this.retrieve(addressId);
+          const instructions = address.delivery_instructions || [];
+          
+          instructions[index] = instruction;
+          address.delivery_instructions = instructions;
+          
+          return await manager.withRepository(this.addressRepository_).save(address);
+      });
+  }
+    
+  async removeDeliveryInstruction(
+      addressId: string,
+      index: number
+  ): Promise<Address> {
+      return await this.atomicPhase_(async (manager) => {
+          const address = await this.retrieve(addressId);
+          const instructions = address.delivery_instructions || [];
+          
+          instructions.splice(index, 1);
+          address.delivery_instructions = instructions;
+          
+          return await manager.withRepository(this.addressRepository_).save(address);
+      });
+  }
+
 }
 
 export default AddressService;

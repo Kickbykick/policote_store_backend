@@ -4,7 +4,7 @@ import { MedusaError } from "@medusajs/utils";
 import { RewardRepository } from "src/repositories/reward";
 import AddressRepository from "src/repositories/address";
 import { AppInfo } from "src/models/app-info";
-import AppInfoRepository from "src/repositories/app_info";
+import AppInfoRepository from "src/repositories/app-info";
 
 class AppInfoService extends TransactionBaseService {
   protected readonly appInfoRepository_: typeof AppInfoRepository;

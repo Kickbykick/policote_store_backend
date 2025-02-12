@@ -4,7 +4,7 @@ import { Reward } from "../models/reward";
 export const RewardRepository = dataSource
   .getRepository(Reward)
   .extend(
-    {
+  {
     async findById(id: string): Promise<Reward | null> {
       return this.findOne({ where: { id: id } });
     },

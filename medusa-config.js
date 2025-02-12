@@ -41,9 +41,45 @@ const plugins = [
   `medusa-fulfillment-manual`,
   `medusa-payment-manual`,
   {
+    resolve: `medusa-plugin-twilio-sms`,
+    options: {
+      account_sid: process.env.TWILIO_ACCOUNT_SID || "",
+      auth_token: process.env.TWILIO_AUTH_TOKEN || "",
+      from_number: process.env.TWILIO_PHONE_NUMBER || "",
+    },
+  },
+  // {
+  //   resolve: `./src/services/firebase`,
+  //   options: {}
+  // },
+  // {
+  //   resolve: `./src/services/firebase-admin`,
+  //   options: {}
+  // },
+  {
     resolve: `@medusajs/file-local`,
     options: {
       upload_dir: "uploads",
+    },
+  },
+  {
+    resolve: `medusa-payment-stripe`,
+    options: {
+      api_key: process.env.STRIPE_TEST_API_KEY,
+      webhook_secret: process.env.STRIPE_WEBHOOK_SECRET,
+    },
+  },
+  {
+    resolve: `medusa-file-s3`,
+    options: {
+      s3_url: process.env.S3_URL,
+      bucket: process.env.S3_BUCKET,
+      region: process.env.S3_REGION,
+      access_key_id: process.env.S3_ACCESS_KEY_ID,
+      secret_access_key: process.env.S3_SECRET_ACCESS_KEY,
+      aws_config_object: {
+        customUserAgent: process.env.S3_CUSTOM_AGENT,
+      },
     },
   },
   {
@@ -120,6 +156,9 @@ const projectConfig = {
   store_cors: STORE_CORS,
   database_url: DATABASE_URL,
   admin_cors: ADMIN_CORS,
+  twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || "",
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || "",
+  twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || "",
   // Uncomment the following lines to enable REDIS
   // redis_url: REDIS_URL
 };
@@ -132,4 +171,15 @@ module.exports = {
   migrations: {
     path: "./src/migrations"
   },
+  options: {
+    twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || "",
+    twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || "",
+    twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || "",
+  },
+  providers:{
+    notification: {
+      resolve: `./src/services/firebase-notifications`,
+      options: {}
+    },
+  }
 };

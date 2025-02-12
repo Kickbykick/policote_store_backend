@@ -27,3 +27,5 @@ export const POST = async (
 
   res.status(201).json({ reward: created })
 }
+
+export const AUTHENTICATE = false

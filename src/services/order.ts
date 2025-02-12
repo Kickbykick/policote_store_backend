@@ -1,10 +1,12 @@
-import { TransactionBaseService } from "@medusajs/medusa"
+import { OrderService as MedusaOrderService } from "@medusajs/medusa"
 import { EntityManager } from "typeorm"
 import { OrderRepository } from "../repositories/order"
 import { Order } from "../models/order"
 import { Rating } from "src/models/rating"
+import { DeliveryOrderExtension } from "src/models/delivery-order-extension"
+import { MedusaError } from "medusa-core-utils"
 
-class OrderService extends TransactionBaseService {
+class OrderService extends MedusaOrderService {
   protected orderRepository_: typeof OrderRepository
 
   constructor({ orderRepository }) {
@@ -32,7 +34,27 @@ class OrderService extends TransactionBaseService {
     });
   }
 
-  // ... other methods
+  // async retrieve(orderId: string): Promise<Order> {
+  //   // TODO: Change findbyid to something els
+  //   const address = await this.orderRepository_.findOne({ where: { id: orderId } });
+  //   if (!address) {
+  //     throw new MedusaError(
+  //       MedusaError.Types.NOT_FOUND,
+  //       `Order with id: ${orderId} was not found`
+  //     );
+  //   }
+  //   return address;
+  // }
+
+  // async addDeliveryOrderExtension(orderId: string, deliveryOrderExtension: DeliveryOrderExtension): Promise<Order> {
+  //   return await this.atomicPhase_(async (manager) => {
+  //     const orderRepo = manager.withRepository(this.orderRepository_);
+  //     const order = await this.retrieve(orderId);
+      
+  //     order.deliveryOrderExtension = deliveryOrderExtension;
+  //     return await orderRepo.save(order);
+  //   });
+  // }
 }
 
 export default OrderService

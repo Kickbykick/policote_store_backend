@@ -2,7 +2,7 @@ import type {
     MedusaRequest,
     MedusaResponse,
 } from "@medusajs/medusa"
-import AppInfoService from "../../../services/app_info"
+import AppInfoService from "../../../services/app-info"
   
 // GET - List all rewards
 export const GET = async (
@@ -13,5 +13,5 @@ export const GET = async (
 
   const appInfo = await appInfoService.retrieve()
 
-  res.json({ appInfo })
+  res.json({app_info: appInfo })
 }

@@ -68,3 +68,24 @@ Join our [Discord server](https://discord.com/invite/medusajs) to meet other com
 - [Twitter](https://twitter.com/medusajs)
 - [LinkedIn](https://www.linkedin.com/company/medusajs)
 - [Medusa Blog](https://medusajs.com/blog/)
+
+```
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+
+const firebaseConfig = {
+  // Your Firebase configuration
+  apiKey: "AIzaSyCQWopv9u4sDSFWxBe_PYDRj4x_jVi7DfU",
+  authDomain: "policote-9ad7a.firebaseapp.com",
+  projectId: "policote-9ad7a",
+  storageBucket: "policote-9ad7a.appspot.com",
+  messagingSenderId: "707015450052",
+  appId: "1:707015450052:web:dce06a9535cfae1aebd891",
+  measurementId: "G-RY1WXYK95Q"
+};
+
+const firebaseApp = initializeApp(firebaseConfig);
+const analytics = getAnalytics(firebaseApp);
+
+export { firebaseApp, analytics };
+```
