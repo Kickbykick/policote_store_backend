@@ -19,11 +19,16 @@ class FirebaseAdminService extends TransactionBaseService {
 
   constructor() {
     super(arguments[0])
-    initializeApp({
-      credential: cert(serviceAccount),
-    });
-  
-    this.auth = getAuth();
+    if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
+      console.log("Firebase credentials found")
+
+      initializeApp({
+        credential: cert(serviceAccount),
+      });
+      this.auth = getAuth();
+    } else {
+      console.log("Firebase credentials missing - some features may be limited")
+    }
   }
 
   async createCustomToken(userId: string): Promise<string> {
