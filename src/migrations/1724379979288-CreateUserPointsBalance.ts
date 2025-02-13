@@ -12,7 +12,6 @@ export class CreateUserPointsBalance1692740600000 implements MigrationInterface 
                 "total_points" integer NOT NULL,
                 "profile_id" character varying,
                 CONSTRAINT "PK_user_points_balance" PRIMARY KEY ("id"),
-                CONSTRAINT "FK_user_points_balance_profile" FOREIGN KEY ("profile_id") REFERENCES "profile"("id")
             )
         `)
     }
