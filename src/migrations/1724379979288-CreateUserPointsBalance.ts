@@ -11,7 +11,7 @@ export class CreateUserPointsBalance1692740600000 implements MigrationInterface 
                 "deleted_at" TIMESTAMP WITH TIME ZONE,
                 "total_points" integer NOT NULL,
                 "profile_id" character varying,
-                CONSTRAINT "PK_user_points_balance" PRIMARY KEY ("id"),
+                CONSTRAINT "PK_user_points_balance" PRIMARY KEY ("id")
             )
         `)
     }
