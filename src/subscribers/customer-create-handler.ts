@@ -5,11 +5,7 @@ import {
     type ConfigModule,
     Logger, 
 } from "@medusajs/medusa"
-import ProfileService from "../services/profile";
-import { Customer } from "src/models/customer";
-import ResendNotificationService from "../services/resend-notification";
-import PushNotificationService from "src/services/push-notification";
-
+ 
 const RESEND_CUSTOMER_CREATED = process.env.RESEND_CUSTOMER_CREATED;
 const MAX_RETRIES = 3;
 
