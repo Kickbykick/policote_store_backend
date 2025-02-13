@@ -20,8 +20,9 @@ class FirebaseAdminService extends TransactionBaseService {
   constructor() {
     super(arguments[0])
     if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
-      console.log("Firebase credentials found")
-
+      console.log("Project ID length:", process.env.FIREBASE_PROJECT_ID.length)
+      console.log("Private key starts with:", process.env.FIREBASE_PRIVATE_KEY.substring(0, 20))
+      console.log("Client email length:", process.env.FIREBASE_CLIENT_EMAIL.length)
       initializeApp({
         credential: cert(serviceAccount),
       });
