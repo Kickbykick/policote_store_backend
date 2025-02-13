@@ -13,7 +13,6 @@ export class CreateDeliveryOrderExtension1693160000000 implements MigrationInter
                 "pickup_date" TIMESTAMP WITH TIME ZONE NOT NULL,
                 "delivery_time" TIMESTAMP WITH TIME ZONE NOT NULL,
                 "delivery_date" TIMESTAMP WITH TIME ZONE NOT NULL,
-                "drivers_instructions" text[],
                 "garment_instructions" jsonb,
                 CONSTRAINT "PK_delivery_order_extension" PRIMARY KEY ("id"),
                 CONSTRAINT "UQ_delivery_order_extension_order_id" UNIQUE ("order_id"),

@@ -3,15 +3,6 @@ import { MigrationInterface, QueryRunner } from "typeorm";
 export class AlterProfile1725427981895 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        // Drop the existing profile table and its dependencies
-        await queryRunner.query(`
-            ALTER TABLE IF EXISTS "store_staff" DROP CONSTRAINT IF EXISTS "fk_store_staff_profile";
-            ALTER TABLE IF EXISTS "user_points_balance" DROP CONSTRAINT IF EXISTS "fk_user_points_balance_profile";
-            ALTER TABLE IF EXISTS "claimed_rewards" DROP CONSTRAINT IF EXISTS "fk_claimed_rewards_profile";
-            ALTER TABLE IF EXISTS "rating" DROP CONSTRAINT IF EXISTS "fk_rating_profile";
-            DROP TABLE IF EXISTS "profile";
-        `);
-
         await queryRunner.query(`
             CREATE TABLE "profile" (
                 "id" character varying NOT NULL,
