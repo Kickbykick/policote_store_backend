@@ -258,6 +258,56 @@ class DeliveryOrderExtensionService extends TransactionBaseService {
         const deliveryOrderExtension = await this.retrieve(deliveryOrderExtensionId);
         return deliveryOrderExtension.garment_instructions || [];
     }
+
+    async addDriverInstruction(
+      deliveryOrderExtensionId: string, 
+      instruction: { image_url?: string; description: string }
+    ): Promise<DeliveryOrderExtension> {
+      return await this.atomicPhase_(async (manager) => {
+        const deliveryOrderExtension = await this.retrieve(deliveryOrderExtensionId);
+        const currentInstructions = deliveryOrderExtension.driver_instructions || [];
+        
+        deliveryOrderExtension.driver_instructions = [...currentInstructions, instruction];
+        return await manager.withRepository(this.deliveryOrderExtensionRepository_).save(deliveryOrderExtension);
+      });
+    }
+      
+    async updateDriverInstruction(
+        deliveryOrderExtensionId: string,
+        index: number,
+        instruction: { image_url?: string; description: string }
+    ): Promise<DeliveryOrderExtension> {
+        return await this.atomicPhase_(async (manager) => {
+          const deliveryOrderExtension = await this.retrieve(deliveryOrderExtensionId);
+          const instructions = deliveryOrderExtension.driver_instructions || [];
+          
+          instructions[index] = instruction;
+          deliveryOrderExtension.driver_instructions = instructions;
+          
+          return await manager.withRepository(this.deliveryOrderExtensionRepository_).save(deliveryOrderExtension);
+        });
+    }
+      
+    async removeDriverInstruction(
+        deliveryOrderExtensionId: string,
+        index: number
+    ): Promise<DeliveryOrderExtension> {
+        return await this.atomicPhase_(async (manager) => {
+          const deliveryOrderExtension = await this.retrieve(deliveryOrderExtensionId);
+          const instructions = deliveryOrderExtension.driver_instructions || [];
+          
+          instructions.splice(index, 1);
+          deliveryOrderExtension.driver_instructions = instructions;
+          
+          return await manager.withRepository(this.deliveryOrderExtensionRepository_).save(deliveryOrderExtension);
+        });
+    }
+      
+    async getDriverInstructions(deliveryOrderExtensionId: string): Promise<{ image_url?: string; description: string }[]> {
+        const deliveryOrderExtension = await this.retrieve(deliveryOrderExtensionId);
+        return deliveryOrderExtension.driver_instructions || [];
+    }
+  
 }
 
 export default DeliveryOrderExtensionService;

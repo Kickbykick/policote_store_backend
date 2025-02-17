@@ -2,11 +2,10 @@ import { TransactionBaseService } from '@medusajs/medusa';
 import { initializeApp, cert, ServiceAccount } from 'firebase-admin/app';
 import { getAuth, Auth } from 'firebase-admin/auth';
 import admin from "firebase-admin"
-import * as dotenv from 'dotenv';
+import { loadEnvironment } from '../utils/load-environment';
 import { Message } from 'firebase-admin/lib/messaging/messaging-api';
 import { MulticastMessage, BatchResponse } from 'firebase-admin/messaging';
-
-dotenv.config();
+loadEnvironment();
 
 const serviceAccount: ServiceAccount = {
   projectId: process.env.FIREBASE_PROJECT_ID,
@@ -20,9 +19,6 @@ class FirebaseAdminService extends TransactionBaseService {
   constructor() {
     super(arguments[0])
     if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_PRIVATE_KEY && process.env.FIREBASE_CLIENT_EMAIL) {
-      console.log("Project ID length:", process.env.FIREBASE_PROJECT_ID.length)
-      console.log("Private key starts with:", process.env.FIREBASE_PRIVATE_KEY.substring(0, 20))
-      console.log("Client email length:", process.env.FIREBASE_CLIENT_EMAIL.length)
       initializeApp({
         credential: cert(serviceAccount),
       });

@@ -19,7 +19,9 @@ switch (process.env.NODE_ENV) {
 
 try {
   dotenv.config({ path: process.cwd() + "/" + ENV_FILE_NAME });
-} catch (e) {}
+} catch (e) {
+  console.error("Dotenv Config Error -", e);
+}
 
 // CORS when consuming Medusa from admin
 const ADMIN_CORS =
@@ -36,12 +38,11 @@ const DB_HOST = process.env.DB_HOST
 const DB_PORT = process.env.DB_PORT
 const DB_DATABASE = process.env.DB_DATABASE
 
-const DATABASE_URL = 
-  `postgres://${DB_USERNAME}:${DB_PASSWORD}` + 
-  `@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
+const DATABASE_URL = process.env.NODE_ENV === "production" 
+  ? `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
+  : process.env.DATABASE_URL || "postgres://localhost/medusa-starter-default";
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
-
 const GoogleClientId = process.env.GOOGLE_CLIENT_ID || ""
 const GoogleClientSecret = process.env.GOOGLE_CLIENT_SECRET || ""
 
@@ -142,7 +143,7 @@ const plugins = [
   }
 ];
 
-const modules = {
+const modules = process.env.NODE_ENV === "production" ? {
   eventBus: {
     resolve: "@medusajs/event-bus-redis",
     options: {
@@ -155,7 +156,7 @@ const modules = {
       redisUrl: REDIS_URL
     }
   },
-};
+} : {};
 
 /** @type {import('@medusajs/medusa').ConfigModule["projectConfig"]} */
 const projectConfig = {
@@ -167,10 +168,11 @@ const projectConfig = {
   twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || "",
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || "",
   twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || "",
-  database_extra: { ssl: { rejectUnauthorized: false } },
-
-  // Uncomment the following lines to enable REDIS
-  redis_url: REDIS_URL
+  database_extra: process.env.NODE_ENV === "production" 
+    ? { ssl: { rejectUnauthorized: false } }
+    : {},
+  // Only include redis_url in production
+  ...(process.env.NODE_ENV === "production" && { redis_url: REDIS_URL })
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule} */

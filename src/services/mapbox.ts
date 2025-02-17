@@ -1,8 +1,8 @@
 import { TransactionBaseService } from "@medusajs/medusa"
 import { MedusaError } from "medusa-core-utils"
 import axios from "axios"
-import * as dotenv from 'dotenv';
-dotenv.config();
+import { loadEnvironment } from '../utils/load-environment';
+loadEnvironment();
 
 class MapboxService extends TransactionBaseService {
     static identifier = "mapbox"

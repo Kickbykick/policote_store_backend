@@ -1,7 +1,5 @@
 import { Cart } from "../models/cart";
 import { CartRepository } from "../repositories/cart";
-import { MedusaError } from "medusa-core-utils";
-import { TransactionBaseService } from "@medusajs/medusa";
 import { CartService as MedusaCartService } from "@medusajs/medusa"
 
 type InjectedDependencies = {

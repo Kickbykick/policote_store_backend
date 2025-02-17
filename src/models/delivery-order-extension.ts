@@ -65,6 +65,12 @@ export class DeliveryOrderExtension extends BaseEntity {
     description: string
   }[]
 
+  @Column("jsonb", {nullable: true})
+  driver_instructions: {
+    image_url?: string
+    description: string
+  }[]
+
   @CreateDateColumn()
   created_at: Date;
 
