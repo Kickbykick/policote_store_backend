@@ -38,9 +38,10 @@ const DB_HOST = process.env.DB_HOST
 const DB_PORT = process.env.DB_PORT
 const DB_DATABASE = process.env.DB_DATABASE
 
-const DATABASE_URL = process.env.NODE_ENV === "production" 
-  ? `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
-  : process.env.DATABASE_URL || "postgres://localhost/medusa-starter-default";
+const DATABASE_URL = `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`;
+// process.env.NODE_ENV === "production" 
+//   ? `postgres://${DB_USERNAME}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_DATABASE}`
+//   : process.env.DATABASE_URL || "postgres://localhost/medusa-starter-default";
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 const GoogleClientId = process.env.GOOGLE_CLIENT_ID || ""
@@ -143,7 +144,8 @@ const plugins = [
   }
 ];
 
-const modules = process.env.NODE_ENV === "production" ? {
+const modules = //process.env.NODE_ENV === "production" ? 
+{
   eventBus: {
     resolve: "@medusajs/event-bus-redis",
     options: {
@@ -156,7 +158,7 @@ const modules = process.env.NODE_ENV === "production" ? {
       redisUrl: REDIS_URL
     }
   },
-} : {};
+}; //: {};
 
 /** @type {import('@medusajs/medusa').ConfigModule["projectConfig"]} */
 const projectConfig = {
@@ -168,11 +170,13 @@ const projectConfig = {
   twilioAccountSid: process.env.TWILIO_ACCOUNT_SID || "",
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN || "",
   twilioPhoneNumber: process.env.TWILIO_PHONE_NUMBER || "",
-  database_extra: process.env.NODE_ENV === "production" 
-    ? { ssl: { rejectUnauthorized: false } }
-    : {},
+  database_extra: { ssl: { rejectUnauthorized: false } },
+  // process.env.NODE_ENV === "production" 
+  //   ? { ssl: { rejectUnauthorized: false } }
+  //   : {},
   // Only include redis_url in production
-  ...(process.env.NODE_ENV === "production" && { redis_url: REDIS_URL })
+  redis_url: REDIS_URL,
+  // ...(process.env.NODE_ENV === "production" && { redis_url: REDIS_URL })
 };
 
 /** @type {import('@medusajs/medusa').ConfigModule} */
