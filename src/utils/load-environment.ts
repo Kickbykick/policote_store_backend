@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 
 export const loadEnvironment = () => {
     const ENV_FILE_NAME = process.env.NODE_ENV === 'production' 
-        ? '.env.production'
+        ? '.env'
         : process.env.NODE_ENV === 'staging'
         ? '.env.staging'
         : process.env.NODE_ENV === 'test'
