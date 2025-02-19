@@ -5,6 +5,9 @@ import { CustomerRepository } from "../repositories/customer";
 import { Profile } from "../models/profile";
 import ProfileService from "./profile";
 import ClaimedRewardsService from "./claimed-rewards";
+import { Resend } from 'resend';
+import { loadEnvironment } from '../utils/load-environment';
+loadEnvironment();
 
 class CustomerService extends MedusaCustomerService {
     protected readonly customerRepository_: typeof CustomerRepository;
@@ -103,6 +106,33 @@ class CustomerService extends MedusaCustomerService {
             console.log(error);
             throw error;
         }
+    }
+
+    async delete(customerId: string): Promise<void> {
+        return await this.atomicPhase_(async (manager) => {
+            // Get customer before deletion for email notification
+            const customer = await this.retrieve(customerId)
+            
+            // Call parent class delete method
+            await super.delete(customerId)
+    
+            // Send deletion confirmation email
+            const resend = new Resend(process.env.RESEND_API_KEY);
+            const sent = await resend.emails.send({
+                from: 'hello@policote.com',
+                to: 'policotetech@gmail.com',
+                subject: 'Delete From Policote App',
+                text: `Here is the customer that delete\n => ${customer.email}\nCustomer:\n ${customer.phone} -- ${customer.first_name} ${customer.last_name}`,
+            })
+            // const resendService = this.container.resolve("resendNotificationService")
+            // await resendService.sendNotification(
+            //     process.env.RESEND_CUSTOMER_DELETED,
+            //     {
+            //         email: customer.email,
+            //         customer: customer
+            //     }
+            // )
+        })
     }
 
     async getProfile(customerId: string): Promise<Profile> {
